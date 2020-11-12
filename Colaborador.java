@@ -112,11 +112,11 @@ public class Colaborador {
 	}
 	
 	public void ativar() {
-		situacao = !situacao;
+		situacao = true;
 	}
 	
 	public void desativar() {
-		situacao = !situacao;
+		situacao = false;
 	}
 	
 }

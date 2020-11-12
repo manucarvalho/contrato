@@ -40,6 +40,6 @@ public class ContratoAssalariado extends Contrato{
 	}
 	
 	public float calcVencimento() {
-		return salarioMensal + salarioMensal * percInsalubridade + salarioMensal * percPericulosidade;
+		return salarioMensal + salarioMensal * (percInsalubridade/100) + salarioMensal * (percPericulosidade/100);
 	}
 }

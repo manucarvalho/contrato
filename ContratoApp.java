@@ -110,7 +110,7 @@ public class ContratoApp {
 			System.out.println("\nCPF inválido.");
 			return;
 		}		
-		
+		colaboradores.add(colaborador);
 		System.out.println("\nColaborador inserido.");
 		
 	}
@@ -118,7 +118,7 @@ public class ContratoApp {
 	public static void registrarContrato() throws ParseException {
 		Date data;
 		String matricula, tipo;
-		Contrato contrato = null;
+		Contrato contrato = null;		
 		float salMensal, percInsal, percPerc, percComissao, ajudaCusto, valorHora;
 		int horaMes;
 		
@@ -131,39 +131,40 @@ public class ContratoApp {
 		System.out.print("Digite o tipo do contrato [Assalariado | Comissionado | Horista]: ");
 		tipo = ler.nextLine();
 		System.out.print("Digite a matrícula do colaborador ligado ao contrato: ");
-		matricula = ler.nextLine();
+		matricula = ler.nextLine();	
 		for (Colaborador c : colaboradores) {
-			if (matricula == c.getMatricula()) {
+			if (c.getMatricula().equals(matricula)) {
 				if (tipo.equals("Assalariado")) {
-					System.out.println("Digite o salário mensal do colaborador: ");
+					System.out.print("Digite o salário mensal do colaborador: ");
 					salMensal = ler.nextFloat();
-					System.out.println("Digite o percentual de insalubridade: ");
+					System.out.print("Digite o percentual de insalubridade: ");
 					percInsal = ler.nextFloat();
-					System.out.println("Digite o percentual de periculosidade: ");
+					System.out.print("Digite o percentual de periculosidade: ");
 					percPerc = ler.nextFloat();
 					contrato = new ContratoAssalariado(data, c, salMensal, percInsal, percPerc);
 				}
 				if (tipo.equals("Comissionado")) {
-					System.out.println("Digite o percentual da comissão do colaborador: ");
+					System.out.print("Digite o percentual da comissão do colaborador: ");
 					percComissao = ler.nextFloat();
-					System.out.println("Digite a ajuda de custo: ");
+					System.out.print("Digite a ajuda de custo: ");
 					ajudaCusto = ler.nextFloat();
 					contrato = new ContratoComissionado(data, c, percComissao, ajudaCusto);
 				}
-				if (tipo.equals("Comissionado")) {
-					System.out.println("Digite as horas trabalhadas por mês do colaborador: ");
+				if (tipo.equals("Horista")) {
+					System.out.print("Digite as horas trabalhadas por mês do colaborador: ");
 					horaMes = ler.nextInt();
-					System.out.println("Digite o valor da hora de trabalho do colaborador: ");
+					System.out.print("Digite o valor da hora de trabalho do colaborador: ");
 					valorHora = ler.nextFloat();
 					contrato = new ContratoHorista(data, c, horaMes, valorHora);
-				}
+				}			
 			} else {
 				System.out.println("\nColaborador não encontrado.");
 				return;
 			}
-		}		
-		
-		System.out.println("\nNúmero do contrato registrado: " + contrato.getId());
+		}	
+		contratos.add(contrato);
+		System.out.println("\nContrato registrado.");
+		System.out.println("Número do contrato registrado: " + contrato.getId());
 		
 	}
 	
@@ -174,9 +175,13 @@ public class ContratoApp {
 		idContrato = ler.nextInt();
 		for (Contrato c : contratos) {
 			if (idContrato == c.getId()) {
-				System.out.println("Dados do contrato: ");
-				System.out.println("Data de início: " + c.getDataInicio());
-				System.out.println("Data de encerramento: " + c.getDataEncerramento());
+				System.out.println("\nDados do contrato: ");
+				System.out.println("Data de início: " + sdf.format(c.getDataInicio()));
+				if (c.getDataEncerramento() == null) {
+					System.out.println("Data de encerramento: - ");
+				} else {
+					System.out.println("Data de encerramento: " + sdf.format(c.getDataEncerramento()));
+				}
 				System.out.println("Situação: " + (c.isAtivo() == true ? "Ativo" : "Desativo"));
 				if (c instanceof ContratoAssalariado) {
 					System.out.println("Tipo do contrato: Assalariado");
@@ -187,7 +192,7 @@ public class ContratoApp {
 				if (c instanceof ContratoHorista) {
 					System.out.println("Tipo do contrato: Horista");
 				}
-				System.out.println("Dados do colaborador: ");
+				System.out.println("\nDados do colaborador: ");
 				System.out.println("Matrícula: " + c.getColaborador().getMatricula());
 				System.out.println("Nome: " + c.getColaborador().getNome());
 				System.out.println("CPF: " + c.getColaborador().getCpf());
@@ -225,7 +230,7 @@ public class ContratoApp {
 	public static void listarColaboradoresAtivos() {
 		boolean colaboradorAtivo = false;
 		
-		System.out.println("Lista de colaboradores ativos");
+		System.out.println("\nLista de colaboradores ativos");
 		for (Colaborador c : colaboradores) {
 			if (c.isSituacao() == true) {
 				colaboradorAtivo = true;
@@ -235,18 +240,18 @@ public class ContratoApp {
 			}
 		}
 		if (colaboradorAtivo == false) {
-			System.out.println("Nenhum colaborador ativo encontrado.");
+			System.out.println("\nNenhum colaborador ativo encontrado.");
 		}
 	}
 	
 	public static void consultarContratoColaborador() {
 		String entrada;
 		
-		System.out.print("digite a matricula ou o CPF do colaborador: ");
+		System.out.print("Digite a matricula ou o CPF do colaborador: ");
 		entrada = ler.nextLine();
 		for (Contrato c : contratos) {
-			if (entrada == c.getColaborador().getMatricula() || entrada == c.getColaborador().getCpf()) {
-				System.out.println("Dados do colaborador: ");
+			if (entrada.equals(c.getColaborador().getMatricula()) || entrada.equals(c.getColaborador().getCpf())) {
+				System.out.println("\nDados do colaborador: ");
 				System.out.println("Matrícula: " + c.getColaborador().getMatricula());
 				System.out.println("Nome: " + c.getColaborador().getNome());
 				System.out.println("CPF: " + c.getColaborador().getCpf());
@@ -262,8 +267,12 @@ public class ContratoApp {
 				if (c instanceof ContratoHorista) {
 					System.out.println("Tipo do contrato: Horista");
 				}
-				System.out.println("Data de início: " + c.getDataInicio());
-				System.out.println("Data de encerramento: " + c.getDataEncerramento());
+				System.out.println("Data de início: " + sdf.format(c.getDataInicio()));
+				if (c.getDataEncerramento() == null) {
+					System.out.println("Data de encerramento: - ");
+				} else {
+					System.out.println("Data de encerramento: " + sdf.format(c.getDataEncerramento()));
+				}
 				System.out.println("Situação: " + (c.isAtivo() == true ? "Ativo" : "Desativo"));				
 			}
 		}
@@ -280,15 +289,17 @@ public class ContratoApp {
 			if (id == c.getId()) {
 				if (c.isAtivo() == true) {
 					if (c instanceof ContratoComissionado) {
-						if (id == vendaCom.getContrComissionado().getId()) {
+						
 							System.out.print("Digite o mês: ");
 							mes = ler.nextInt();
 							System.out.print("Digite o ano: ");
 							ano = ler.nextInt();
 							System.out.print("Digite o valor total das vendas: ");
-							valorVenda  = ler.nextInt();
+							valorVenda  = ler.nextFloat();
 							vendaCom = new VendaComissionada(mes, ano, valorVenda, (ContratoComissionado) c);
-						}						
+							vendas.add(vendaCom);
+							System.out.println("Venda comissionada lançada.");
+												
 					} else {
 						System.out.println("Este contrato não do tipo comissionado.");
 					}
@@ -314,7 +325,7 @@ public class ContratoApp {
 				vlFaturam += vc.getValor();
 			}
 		}
-		System.out.println("Folha de pagamento de " + mes + "/" + ano);
+		System.out.println("\nFolha de pagamento de " + mes + "/" + ano);
 		for (Contrato c : contratos) {
 			if (c.isAtivo() == true) {
 				System.out.println("\nDados do contrato: ");
@@ -334,7 +345,8 @@ public class ContratoApp {
 				System.out.println("\nDados do colaborador: ");
 				System.out.println("Matrícula: " + c.getColaborador().getMatricula());
 				System.out.println("Nome: " + c.getColaborador().getNome());
-				System.out.printf("\nSalário: R$ %.2f", salario);
+				System.out.printf("Salário: R$ %.2f", salario);
+				System.out.println();
 			}
 		}
 	}

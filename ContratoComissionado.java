@@ -30,6 +30,6 @@ public class ContratoComissionado extends Contrato {
 	}
 	
 	public float calcVencimento(float vlFaturam) {
-		return vlFaturam * percComissao + ajudaCusto;
+		return vlFaturam * (percComissao/100) + ajudaCusto;
 	}
 }

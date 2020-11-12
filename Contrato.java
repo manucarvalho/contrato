@@ -10,6 +10,10 @@ public abstract class Contrato {
 	private Colaborador colaborador;
 	private boolean ativo;
 	
+	public Contrato() {
+		
+	}
+	
 	public Contrato(Date dataInicio, Colaborador colaborador) {
 		idGeral++;
 		this.id = idGeral;
